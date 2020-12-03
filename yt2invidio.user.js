@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit
 // @license     CC BY-NC-SA
 // @include     *
-// @version     1.5.1
+// @version     2.0.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -20,6 +20,8 @@
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 
+var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy;
+
 // Default Config
 const defaultConfig = {
   hosts: {invidious: "invidious.snopyta.org", nitter: "nitter.net", bibliogram: "bibliogram.art", teddit: "teddit.net"},
@@ -30,62 +32,71 @@ console.log(defaultConfig.hosts);
 console.log(obj.hosts.hasOwnProperty('bibliogram')); // true
 */
 
-// Get the Invidious instance to use for rewrite
 GM.getValue('YT2IConfig',JSON.stringify(defaultConfig)).then(function(result) {
-  rewriteLinks(result);
+  init(result);
+  rewriteEmbeddedLinks();
+
+  document.addEventListener('mouseover', e => {
+    for (link of document.links)
+      if (link == e.target || link.contains(e.target))
+        rewriteLink(link);
+  }, false);
 });
 
-
-// Do the actual rewrite
-function rewriteLinks(config) {
+function init(config) {
   console.log(`Using '${config}' for rewrite`);
   var cfg = JSON.parse(config);
-  var videohost = cfg.hosts.invidious;
-  var nitterhost = cfg.hosts.nitter;
-  var bibliogramhost = cfg.hosts.bibliogram;
-  var teddithost = cfg.hosts.teddit;
-  var invProxy = 'local=0';
+  videohost = cfg.hosts.invidious;
+  nitterhost = cfg.hosts.nitter;
+  bibliogramhost = cfg.hosts.bibliogram;
+  teddithost = cfg.hosts.teddit;
+  invProxy = 'local=0';
   if ( cfg.invProxy == 1 ) { invProxy = 'local=1'; }
   console.log('Invidious: '+videohost+', Params: '+invProxy);
   console.log('Nitter: '+nitterhost);
   console.log('Bibliogram: '+bibliogramhost);
   console.log('Teddit: '+teddithost);
-  // --=[ document links ]=--
-  console.log('Checking '+document.links.length+' links for YT, Twitter & Insta');
-  for(var i = 0; i < document.links.length; i++) {
-    var elem = document.links[i];
+}
 
+// Do the actual rewrite
+function rewriteLink(elem) {
+  var before = elem.href;
+  // --=[ document links ]=--
     // Youtube: https://www.youtube.com/watch?v=cRRA2xRRgl8 || https://www.youtube.com/channel/dfqwfhqQ34er || https://www.youtube.com/playlist?list=PLjV3HijScGMynGvjJrvNNd5Q9pPy255dL
     // only rewrite if we're not on Invidious already (too keep the "watch this on YouTube" links intact)
     if (videohost != '' && elem.href.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href='https://'+videohost+RegExp.$3+'&'+invProxy; }
+      if (location.hostname != videohost) { elem.href=elem.title='https://'+videohost+RegExp.$3+'&'+invProxy; }
     } else if (videohost != '' && elem.href.match(/((www|m)\.)?youtu.be\/([a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href='https://'+videohost+'/watch?v='+RegExp.$3+'?'+invProxy; }
+      if (location.hostname != videohost) { elem.href=elem.title='https://'+videohost+'/watch?v='+RegExp.$3+'?'+invProxy; }
     } else if (videohost != '' && elem.href.match(/((www|m)\.)?youtube.com(\/channel\/[a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href='https://'+videohost+RegExp.$3+'?'+invProxy; }
+      if (location.hostname != videohost) { elem.href=elem.title= 'https://'+videohost+RegExp.$3+'?'+invProxy; }
 
     // Twitter
     } else if (nitterhost != '' && elem.href.match(/(mobile\.)?twitter\.com\/([^&#]+)/i)) {
-      if (location.hostname != nitterhost) elem.href='https://'+nitterhost+'/'+RegExp.$2;
+      if (location.hostname != nitterhost) elem.href=elem.title='https://'+nitterhost+'/'+RegExp.$2;
     }
 
     // Bibliogram
     else if (bibliogramhost != '' && elem.href.match(/(www\.)?instagram\.com\/(p|tv)\/([^&#/]+)/i)) { // profile
       if (location.hostname != bibliogramhost) {
-        elem.href = 'https://'+bibliogramhost+'/p/' + RegExp.$3;
+        elem.href=elem.title='https://'+bibliogramhost+'/p/' + RegExp.$3;
       }
     } else if (bibliogramhost != '' && elem.href.match(/(www\.)?instagram\.com\/([^&#/]+)/i)) { // image or video
       if (location.hostname != bibliogramhost) {
-        elem.href = 'https://'+bibliogramhost+'/u/' + RegExp.$2;
+        elem.href=elem.title='https://'+bibliogramhost+'/u/' + RegExp.$2;
       }
     }
 
     // Teddit
     else if (teddithost != '' && elem.href.match(/((www|old)\.)?reddit.com\/(.*)/i)) {
-      if (location.hostname != teddithost) { elem.href = 'https://'+teddithost+'/'+RegExp.$3; }
+      if (location.hostname != teddithost) { elem.href=elem.title='https://'+teddithost+'/'+RegExp.$3; }
     }
-  }
 
+    if (elem.href != before)
+      console.log('Rewrote link to '+ elem.href);
+}
+
+function rewriteEmbeddedLinks() {
   // --=[ embedded links ]=--
   // based on https://greasyfork.org/en/scripts/394841-youtube-to-invidio-us-embed
   if (videohost != '')  {
@@ -112,7 +123,7 @@ function rewriteLinks(config) {
     }
   }
 
-  console.log('Rewrite done.');
+  console.log('Rewrite for embedded links done.');
 }
 
 
@@ -128,6 +139,7 @@ async function setInvidiousInstance() {
   if ( vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)(\/.*)?$/) ) {
     if ( vhost == '' ) { cfg.hosts.invidious = ''; }
     else { cfg.hosts.invidious = RegExp.$2; }
+    init(JSON.stringify(cfg));
     GM.setValue('YT2IConfig',JSON.stringify(cfg));
   }
 }
@@ -138,6 +150,7 @@ async function setNitterInstance() {
   if ( vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)(\/.*)?$/) ) {
     if ( vhost == '' ) { cfg.hosts.nitter = ''; }
     else { cfg.hosts.nitter = RegExp.$2; }
+    init(JSON.stringify(cfg));
     GM.setValue('YT2IConfig',JSON.stringify(cfg));
   }
 }
@@ -148,6 +161,7 @@ async function setBibliogramInstance() {
   if ( vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)(\/.*)?$/) ) {
     if ( vhost == '' ) { cfg.hosts.bibliogram = ''; }
     else { cfg.hosts.bibliogram = RegExp.$2; }
+    init(JSON.stringify(cfg));
     GM.setValue('YT2IConfig',JSON.stringify(cfg));
   }
 }
@@ -156,6 +170,7 @@ async function toggleInvidiousProxy() {
   cfg = JSON.parse(cfgs);
   if ( cfg.invProxy == 1 ) { cfg.invProxy = 0; console.log('Invidious proxying turned off.'); }
   else { cfg.invProxy = 1; console.log('Invidious proxying turned on.'); }
+  init(JSON.stringify(cfg));
   GM.setValue('YT2IConfig',JSON.stringify(cfg));
 }
 async function setTedditInstance() {
@@ -165,6 +180,7 @@ async function setTedditInstance() {
   if ( vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)(\/.*)?$/) ) {
     if (vhost=='') { cfg.hosts.teddit = ''; }
     else { cfg.hosts.teddit = RegExp.$2; }
+    init(JSON.stringify(cfg));
     GM.setValue('YT2IConfig',JSON.stringify(cfg));
   }
 }
