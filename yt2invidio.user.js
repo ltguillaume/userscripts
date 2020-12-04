@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.0.0
+// @version     2.1.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -20,12 +20,13 @@
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 
-var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy;
+var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover;
 
 // Default Config
 const defaultConfig = {
   hosts: {invidious: "invidious.snopyta.org", nitter: "nitter.net", bibliogram: "bibliogram.art", teddit: "teddit.net"},
-  invProxy: 0
+  invProxy: 0,
+  onHover: 0
 };
 /*
 console.log(defaultConfig.hosts);
@@ -35,12 +36,6 @@ console.log(obj.hosts.hasOwnProperty('bibliogram')); // true
 GM.getValue('YT2IConfig',JSON.stringify(defaultConfig)).then(function(result) {
   init(result);
   rewriteEmbeddedLinks();
-
-  document.addEventListener('mouseover', e => {
-    for (link of document.links)
-      if (link == e.target || link.contains(e.target))
-        rewriteLink(link);
-  }, false);
 });
 
 function init(config) {
@@ -50,12 +45,22 @@ function init(config) {
   nitterhost = cfg.hosts.nitter;
   bibliogramhost = cfg.hosts.bibliogram;
   teddithost = cfg.hosts.teddit;
-  invProxy = 'local=0';
-  if ( cfg.invProxy == 1 ) { invProxy = 'local=1'; }
+  invProxy = 'local='+ (cfg.invProxy || defaultConfig.invProxy);
+  onHover = cfg.onHover || defaultConfig.onHover;
   console.log('Invidious: '+videohost+', Params: '+invProxy);
   console.log('Nitter: '+nitterhost);
   console.log('Bibliogram: '+bibliogramhost);
   console.log('Teddit: '+teddithost);
+  console.log('Rewrite on hover: '+ onHover);
+
+  document.addEventListener(cfg.onHover == 1 ? 'mouseover' : 'click', triggerRewrite);
+  document.removeEventListener(cfg.onHover == 0 ? 'mouseover' : 'click', triggerRewrite);
+}
+
+function triggerRewrite(e) {
+  for (link of document.links)
+    if (link == e.target || link.contains(e.target))
+      rewriteLink(link);
 }
 
 // Do the actual rewrite
@@ -65,35 +70,37 @@ function rewriteLink(elem) {
     // Youtube: https://www.youtube.com/watch?v=cRRA2xRRgl8 || https://www.youtube.com/channel/dfqwfhqQ34er || https://www.youtube.com/playlist?list=PLjV3HijScGMynGvjJrvNNd5Q9pPy255dL
     // only rewrite if we're not on Invidious already (too keep the "watch this on YouTube" links intact)
     if (videohost != '' && elem.href.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href=elem.title='https://'+videohost+RegExp.$3+'&'+invProxy; }
+      if (location.hostname != videohost) { elem.href='https://'+videohost+RegExp.$3+'&'+invProxy; }
     } else if (videohost != '' && elem.href.match(/((www|m)\.)?youtu.be\/([a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href=elem.title='https://'+videohost+'/watch?v='+RegExp.$3+'?'+invProxy; }
+      if (location.hostname != videohost) { elem.href='https://'+videohost+'/watch?v='+RegExp.$3+'?'+invProxy; }
     } else if (videohost != '' && elem.href.match(/((www|m)\.)?youtube.com(\/channel\/[a-z0-9_-]+)/i)) {
-      if (location.hostname != videohost) { elem.href=elem.title= 'https://'+videohost+RegExp.$3+'?'+invProxy; }
+      if (location.hostname != videohost) { elem.href='https://'+videohost+RegExp.$3+'?'+invProxy; }
 
     // Twitter
     } else if (nitterhost != '' && elem.href.match(/(mobile\.)?twitter\.com\/([^&#]+)/i)) {
-      if (location.hostname != nitterhost) elem.href=elem.title='https://'+nitterhost+'/'+RegExp.$2;
+      if (location.hostname != nitterhost) elem.href='https://'+nitterhost+'/'+RegExp.$2;
     }
 
     // Bibliogram
     else if (bibliogramhost != '' && elem.href.match(/(www\.)?instagram\.com\/(p|tv)\/([^&#/]+)/i)) { // profile
       if (location.hostname != bibliogramhost) {
-        elem.href=elem.title='https://'+bibliogramhost+'/p/' + RegExp.$3;
+        elem.href = 'https://'+bibliogramhost+'/p/' + RegExp.$3;
       }
     } else if (bibliogramhost != '' && elem.href.match(/(www\.)?instagram\.com\/([^&#/]+)/i)) { // image or video
       if (location.hostname != bibliogramhost) {
-        elem.href=elem.title='https://'+bibliogramhost+'/u/' + RegExp.$2;
+        elem.href = 'https://'+bibliogramhost+'/u/' + RegExp.$2;
       }
     }
 
     // Teddit
     else if (teddithost != '' && elem.href.match(/((www|old)\.)?reddit.com\/(.*)/i)) {
-      if (location.hostname != teddithost) { elem.href=elem.title='https://'+teddithost+'/'+RegExp.$3; }
+      if (location.hostname != teddithost) { elem.href = 'https://'+teddithost+'/'+RegExp.$3; }
     }
 
-    if (elem.href != before)
+    if (elem.href != before) {
+      elem.title = '[YT2I]'+ (elem.title.length ? ' '+ elem.title : '');
       console.log('Rewrote link to '+ elem.href);
+    }
 }
 
 function rewriteEmbeddedLinks() {
@@ -132,6 +139,14 @@ function rewriteEmbeddedLinks() {
 // https://github.com/omarroth/invidious/wiki/Invidious-Instances
 // https://github.com/zedeus/nitter/wiki/Instances
 // https://github.com/cloudrac3r/bibliogram/wiki/Instances
+async function toggleRewriteOnHover() {
+  let cfgs = await GM.getValue('YT2IConfig',JSON.stringify(defaultConfig));
+  cfg = JSON.parse(cfgs);
+  if ( cfg.onHover == 1 ) { cfg.onHover = 0; console.log('Rewrite on hover turned off.'); }
+  else { cfg.onHover = 1; console.log('Rewrite on hover turned on.'); }
+  init(JSON.stringify(cfg));
+  GM.setValue('YT2IConfig',JSON.stringify(cfg));
+}
 async function setInvidiousInstance() {
   let cfgs = await GM.getValue('YT2IConfig',JSON.stringify(defaultConfig));
   cfg = JSON.parse(cfgs);
@@ -199,6 +214,7 @@ function openTedditList() {
   GM.openInTab('https://codeberg.org/teddit/teddit', { active: true, insert: true });
 }
 
+GM_registerMenuCommand('Rewrite on hover',toggleRewriteOnHover);
 GM_registerMenuCommand('Set Invidious instance',setInvidiousInstance);
 GM_registerMenuCommand('Show list of known Invidious instances', openInvidiousList );
 GM_registerMenuCommand('Toggle Inviduous proxy state', toggleInvidiousProxy);
