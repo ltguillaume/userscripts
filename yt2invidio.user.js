@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.1.0
+// @version     2.1.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -20,7 +20,7 @@
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 
-var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover;
+var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover, skipClick;
 
 // Default Config
 const defaultConfig = {
@@ -51,18 +51,31 @@ function init(config) {
   console.log('Nitter: '+nitterhost);
   console.log('Bibliogram: '+bibliogramhost);
   console.log('Teddit: '+teddithost);
-  console.log('Rewrite on hover: '+ onHover);
+  console.log('Rewriting on '+ (onHover ? 'hover' : 'click'));
 
-  document.addEventListener(cfg.onHover == 1 ? 'mouseover' : 'click', triggerRewrite);
-  document.removeEventListener(cfg.onHover == 0 ? 'mouseover' : 'click', triggerRewrite);
+  if (onHover)
+    document.addEventListener('mouseover', triggerRewrite);
+  else
+    document.removeEventListener('mouseover', triggerRewrite);
+  document.addEventListener('click', triggerRewrite);
 }
 
 function triggerRewrite(e) {
-  for (link of document.links)
-    if (link == e.target || link.contains(e.target))
-      rewriteLink(link);
-}
+  if (skipClick && e.type == 'click') return skipClick = 0;
 
+  for (link of document.links)
+    if (link == e.target || link.contains(e.target)) {
+      if (e.altKey) {
+        if (e.type != 'click') return;
+        e.preventDefault();
+        if (link.hreflang.indexOf('https://') == 0)
+          link.href = link.hreflang;
+        skipClick = 1;
+        link.click();
+      } else
+        rewriteLink(link);
+    }
+}
 // Do the actual rewrite
 function rewriteLink(elem) {
   var before = elem.href;
@@ -94,7 +107,7 @@ function rewriteLink(elem) {
     }
 
     if (elem.href != before) {
-      elem.title = '[YT2I]'+ (elem.title.length ? ' '+ elem.title : '');
+      elem.hreflang = before;
       console.log('Rewrote link to '+ elem.href);
     }
 }
@@ -138,8 +151,8 @@ function rewriteEmbeddedLinks() {
 async function toggleRewriteOnHover() {
   let cfgs = await GM.getValue('YT2IConfig',JSON.stringify(defaultConfig));
   cfg = JSON.parse(cfgs);
-  if ( cfg.onHover == 1 ) { cfg.onHover = 0; console.log('Rewrite on hover turned off.'); }
-  else { cfg.onHover = 1; console.log('Rewrite on hover turned on.'); }
+  cfg.onHover ^= 1;
+  alert('Rewriting on '+ (cfg.onHover ? 'hover' : 'click'));
   init(JSON.stringify(cfg));
   GM.setValue('YT2IConfig',JSON.stringify(cfg));
 }
@@ -210,7 +223,7 @@ function openTedditList() {
   GM.openInTab('https://codeberg.org/teddit/teddit', { active: true, insert: true });
 }
 
-GM_registerMenuCommand('Rewrite on hover',toggleRewriteOnHover);
+GM_registerMenuCommand('Toggle rewrite on hover',toggleRewriteOnHover);
 GM_registerMenuCommand('Set Invidious instance',setInvidiousInstance);
 GM_registerMenuCommand('Show list of known Invidious instances', openInvidiousList );
 GM_registerMenuCommand('Toggle Inviduous proxy state', toggleInvidiousProxy);
