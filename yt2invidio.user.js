@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.1.1
+// @version     2.1.3
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -20,7 +20,7 @@
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 
-var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover, skipClick;
+var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover;
 
 // Default Config
 const defaultConfig = {
@@ -54,28 +54,25 @@ function init(config) {
   console.log('Rewriting on '+ (onHover ? 'hover' : 'click'));
 
   if (onHover)
-    document.addEventListener('mouseover', triggerRewrite);
+    document.addEventListener('mouseover', triggerRewrite, true);
   else
-    document.removeEventListener('mouseover', triggerRewrite);
-  document.addEventListener('click', triggerRewrite);
+    document.removeEventListener('mouseover', triggerRewrite, true);
+  document.addEventListener('click', triggerRewrite, true);
+  document.addEventListener('auxclick', triggerRewrite, true);
 }
 
 function triggerRewrite(e) {
-  if (skipClick && e.type == 'click') return skipClick = 0;
-
+  if (e.button == 2) return; // Right-click
   for (link of document.links)
     if (link == e.target || link.contains(e.target)) {
       if (e.altKey) {
-        if (e.type != 'click') return;
-        e.preventDefault();
         if (link.hreflang.indexOf('https://') == 0)
           link.href = link.hreflang;
-        skipClick = 1;
-        link.click();
       } else
         rewriteLink(link);
     }
 }
+
 // Do the actual rewrite
 function rewriteLink(elem) {
   var before = elem.href;
