@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.1.3
+// @version     2.1.4
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -28,6 +28,8 @@ const defaultConfig = {
   invProxy: 0,
   onHover: 0
 };
+
+const orgHosts = ["youtu.be", "twitter.com", "instagram.com", "reddit.com"];
 /*
 console.log(defaultConfig.hosts);
 console.log(obj.hosts.hasOwnProperty('bibliogram')); // true
@@ -59,11 +61,13 @@ function init(config) {
     document.removeEventListener('mouseover', triggerRewrite, true);
   document.addEventListener('click', triggerRewrite, true);
   document.addEventListener('auxclick', triggerRewrite, true);
+  
+  document.addEventListener('keypress', openOriginalHost);
 }
 
 function triggerRewrite(e) {
   if (e.button == 2) return; // Right-click
-  for (link of document.links)
+  for (var link of document.links)
     if (link == e.target || link.contains(e.target)) {
       if (e.altKey) {
         if (link.hreflang.indexOf('https://') == 0)
@@ -71,6 +75,16 @@ function triggerRewrite(e) {
       } else
         rewriteLink(link);
     }
+}
+
+function openOriginalHost(e) {
+  if (e.altKey && e.key == 'o') {
+    var i = 0;
+    for (var host of [videohost, nitterhost, bibliogramhost, teddithost])
+      if (host.length && location.href.indexOf('https://'+ host) == 0)
+        return location.assign(location.href.replace(host, orgHosts[i]));
+      else i++;
+  }
 }
 
 // Do the actual rewrite
