@@ -9,15 +9,11 @@
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
-// @grant       GM_getValue
-// @grant       GM_setValue
 // @grant       GM_registerMenuCommand
-// @grant       GM_openInTab
 // @grant       GM.openInTab
 // @grant       unsafeWindow
 // @homepageURL https://codeberg.org/ltGuillaume/userscripts
 // @downloadURL https://codeberg.org/ltGuillaume/userscripts/raw/master/yt2invidio.user.js
-// @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 
 var cfg, videohost, nitterhost, bibliogramhost, teddithost, invProxy, onHover;
