@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        YT2Invidio
 // @namespace   de.izzysoft
-// @author      Izzy
+// @author      Izzy + ltGuillaume
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.1.4
+// @version     2.1.5
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -15,8 +15,8 @@
 // @grant       GM_openInTab
 // @grant       GM.openInTab
 // @grant       unsafeWindow
-// @homepageURL https://codeberg.org/izzy/userscripts
-// @downloadURL https://codeberg.org/izzy/userscripts/raw/branch/master/yt2invidio.user.js
+// @homepageURL https://codeberg.org/ltGuillaume/userscripts
+// @downloadURL https://codeberg.org/ltGuillaume/userscripts/raw/master/yt2invidio.user.js
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // ==/UserScript==
 

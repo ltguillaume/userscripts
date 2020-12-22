@@ -1,1 +1,0 @@
-This script mainly rewrites app-links from play.google.com to Appbrain.com, where (except for the rating comments) details are easier accessible and additional information (like modules contained in an app) are available.
