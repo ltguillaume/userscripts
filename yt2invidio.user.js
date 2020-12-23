@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.2.0
+// @version     2.2.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -109,9 +109,7 @@ function rewriteLink(elem) {
 function rewriteEmbeddedLinks() {
   // Based on https://greasyfork.org/en/scripts/394841-youtube-to-invidio-us-embed
   if (cfg.hosts.invidious != '')  {
-    var src, dataSrc, iframes = document.getElementsByTagName('iframe');
-    var embProxy
-    console.log('Checking '+ iframes.length +' frames for embedded videos');
+    var src, dataSrc, iframes = document.getElementsByTagName('iframe'), embProxy, count = 0;
     for (var i = 0; i < iframes.length; i++) {
       src = iframes[i].getAttribute('src');
       dataSrc = false;
@@ -126,16 +124,17 @@ function rewriteEmbeddedLinks() {
         else
           embProxy = '&local='+ cfg.invProxy;
         if (dataSrc)
-          iframes[i].setAttribute('data-s9e-mediaembed-src', 'https://'+ cfg.hosts.invidious+RegExp.$3+embProxy);
+          iframes[i].setAttribute('data-s9e-mediaembed-src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy);
         else
-          iframes[i].setAttribute('src', 'https://'+ cfg.hosts.invidious+RegExp.$3+embProxy);
+          iframes[i].setAttribute('src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy);
 //      iframes[i].setAttribute('style', 'min-height:100%; min-width:100%;');
         iframes[i].setAttribute('frameborder', '0');
         iframes[i].setAttribute('allowfullscreen', '1');
+        count++;
       }
     }
   }
-  console.log('Embedded links rewritten.');
+  console.log('Rewrote '+ count +' of '+ iframes.length +' embedded links.');
 }
 
 function setInvidiousInstance() {
@@ -185,7 +184,7 @@ async function toggle(setting) {
 
 // Open tab with instance list from Invidious/Nitter/Bibliogram/Teddit Wiki
 function openInvidiousList() {
-  GM.openInTab('https://github.com/omarroth/invidious/wiki/Invidious-Instances', { active: true, insert: true });
+  GM.openInTab('https://github.com/iv-org/documentation/blob/master/Invidious-Instances.md', { active: true, insert: true });
 }
 function openNitterList() {
   GM.openInTab('https://github.com/zedeus/nitter/wiki/Instances', { active: true, insert: true });
