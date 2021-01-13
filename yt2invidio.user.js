@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.2.1
+// @version     2.2.2
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -18,7 +18,7 @@
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'invidious.snopyta.org', nitter: 'nitter.net', bibliogram: 'bibliogram.art', teddit: 'teddit.net' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net' },
   invProxy: 0,
   onHover: 0
 };
@@ -190,7 +190,7 @@ function openNitterList() {
   GM.openInTab('https://github.com/zedeus/nitter/wiki/Instances', { active: true, insert: true });
 }
 function openBibliogramList() {
-  GM.openInTab('https://github.com/cloudrac3r/bibliogram/wiki/Instances', { active: true, insert: true });
+  GM.openInTab('https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md', { active: true, insert: true });
 }
 function openTedditList() {
   GM.openInTab('https://codeberg.org/teddit/teddit', { active: true, insert: true });
