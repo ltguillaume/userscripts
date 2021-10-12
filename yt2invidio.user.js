@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.2.3
+// @version     2.2.4
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -22,7 +22,7 @@ const defaultConfig = {
   invProxy: 0,
   onHover: 0
 };
-const orgHosts = [ 'youtu.be', 'twitter.com', 'instagram.com', 'reddit.com' ];
+const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'reddit.com' };
 var cfg;
 
 GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(function(result) {
@@ -68,11 +68,11 @@ function triggerRewrite(e) {
 
 function openOriginalHost(e) {
   if (e.altKey && e.key == 'o') {
-    var i = 0;
-    for (var host of [cfg.hosts.invidious, cfg.hosts.nitter, cfg.hosts.bibliogram, cfg.hosts.teddit])
+    for (i in cfg.hosts) {
+      var host = cfg.hosts[i];
       if (host.length && location.href.indexOf('https://'+ host) == 0)
         return location.assign(location.href.replace(host, orgHosts[i]));
-      else i++;
+    }
   }
 }
 
