@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.2.5
+// @version     2.3.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -18,11 +18,11 @@
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech' },
   invProxy: 0,
   onHover: 0
 };
-const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'reddit.com' };
+const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'reddit.com', imgin: 'imgur.com' };
 var cfg;
 
 GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(function(result) {
@@ -42,6 +42,7 @@ function init(config) {
     +'\nNitter: '+ cfg.hosts.nitter
     +'\nBibliogram: '+ cfg.hosts.bibliogram
     +'\nTeddit: '+ cfg.hosts.teddit
+    +'\nImgin: '+ cfg.hosts.imgin
     +'\nRewriting on '+ (cfg.onHover ? 'hover' : 'click')
   );
 
@@ -103,6 +104,10 @@ function rewriteLink(elem) {
   else if (cfg.hosts.teddit != '' && elem.href.match(/((www|old)\.)?reddit.com\/(.*)/i) && elem.href.indexOf('/duplicates/') == -1)
     elem.href = 'https://'+ cfg.hosts.teddit +'/'+ RegExp.$3;
 
+  // Imgin
+  else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur.com\/(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.imgin +'/'+ RegExp.$3;
+
   if (elem.href != before) {
     elem.hreflang = before;
     console.log('Rewrote link to '+ elem.href);
@@ -152,6 +157,9 @@ function setBibliogramInstance() {
 function setTedditInstance() {
   setInstance('teddit');
 }
+function setImginInstance() {
+  setInstance('imgin');
+}
 
 async function setInstance(host) {
   let cfgs = await GM.getValue('YT2IConfig', JSON.stringify(defaultConfig));
@@ -198,9 +206,14 @@ function openBibliogramList() {
 function openTedditList() {
   GM.openInTab('https://codeberg.org/teddit/teddit', { active: true, insert: true });
 }
+function openImginList() {
+  GM.openInTab('https://git.voidnet.tech/kev/imgin', { active: true, insert: true });
+}
 
 GM_registerMenuCommand('Bibliogram: Set instance', setBibliogramInstance);
 GM_registerMenuCommand('Bibliogram: Show known instances', openBibliogramList);
+GM_registerMenuCommand('Imgin: Set instance', setImginInstance);
+GM_registerMenuCommand('Imgin: Show known instances', openImginList);
 GM_registerMenuCommand('Invidious: Set instance', setInvidiousInstance);
 GM_registerMenuCommand('Invidious: Show known instances', openInvidiousList);
 GM_registerMenuCommand('Inviduous: Toggle proxy state', toggleInvidiousProxy);
