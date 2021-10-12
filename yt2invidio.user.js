@@ -5,15 +5,15 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.2.2
+// @version     2.2.3
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
 // @grant       GM_registerMenuCommand
 // @grant       GM.openInTab
 // @grant       unsafeWindow
-// @homepageURL https://codeberg.org/ltGuillaume/userscripts
-// @downloadURL https://codeberg.org/ltGuillaume/userscripts/raw/master/yt2invidio.user.js
+// @homepageURL https://codeberg.org/ltGuillaume/yt2invidio
+// @downloadURL https://codeberg.org/ltGuillaume/yt2invidio/raw/master/yt2invidio.user.js
 // ==/UserScript==
 
 // Default config
