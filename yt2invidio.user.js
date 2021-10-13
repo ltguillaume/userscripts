@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin. Use alt+click to open original links, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.3.0
+// @version     2.4.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -18,11 +18,11 @@
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech', scribe: 'scribe.rip' },
   invProxy: 0,
   onHover: 0
 };
-const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'reddit.com', imgin: 'imgur.com' };
+const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com' };
 var cfg;
 
 GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(function(result) {
@@ -43,6 +43,7 @@ function init(config) {
     +'\nBibliogram: '+ cfg.hosts.bibliogram
     +'\nTeddit: '+ cfg.hosts.teddit
     +'\nImgin: '+ cfg.hosts.imgin
+    +'\nScribe: '+ cfg.hosts.scribe
     +'\nRewriting on '+ (cfg.onHover ? 'hover' : 'click')
   );
 
@@ -90,7 +91,7 @@ function rewriteLink(elem) {
   else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube.com(\/channel\/[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'?local='+ cfg.invProxy;
 
-  // Twitter
+  // Nitter
   else if (cfg.hosts.nitter != '' && elem.href.match(/(mobile\.)?twitter\.com\/([^&#]+)/i))
     elem.href='https://'+ cfg.hosts.nitter +'/'+ RegExp.$2;
 
@@ -107,6 +108,10 @@ function rewriteLink(elem) {
   // Imgin
   else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur.com\/(.*)/i))
     elem.href = 'https://'+ cfg.hosts.imgin +'/'+ RegExp.$3;
+
+  // Scribe
+  else if (cfg.hosts.scribe != '' && elem.href.match(/((.*)\.)?medium.com\/(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.scribe +'/'+ RegExp.$3;
 
   if (elem.href != before) {
     elem.hreflang = before;
@@ -160,6 +165,9 @@ function setTedditInstance() {
 function setImginInstance() {
   setInstance('imgin');
 }
+function setScribeInstance() {
+  setInstance('scribe');
+}
 
 async function setInstance(host) {
   let cfgs = await GM.getValue('YT2IConfig', JSON.stringify(defaultConfig));
@@ -193,7 +201,7 @@ async function toggle(setting) {
   return cfg[setting];
 }
 
-// Open tab with instance list from Invidious/Nitter/Bibliogram/Teddit Wiki
+// Open tab with instance list/info page
 function openInvidiousList() {
   GM.openInTab('https://github.com/iv-org/documentation/blob/master/Invidious-Instances.md', { active: true, insert: true });
 }
@@ -209,6 +217,9 @@ function openTedditList() {
 function openImginList() {
   GM.openInTab('https://git.voidnet.tech/kev/imgin', { active: true, insert: true });
 }
+function openScribeList() {
+  GM.openInTab('https://sr.ht/~edwardloveall/scribe/', { active: true, insert: true });
+}
 
 GM_registerMenuCommand('Bibliogram: Set instance', setBibliogramInstance);
 GM_registerMenuCommand('Bibliogram: Show known instances', openBibliogramList);
@@ -216,9 +227,11 @@ GM_registerMenuCommand('Imgin: Set instance', setImginInstance);
 GM_registerMenuCommand('Imgin: Show known instances', openImginList);
 GM_registerMenuCommand('Invidious: Set instance', setInvidiousInstance);
 GM_registerMenuCommand('Invidious: Show known instances', openInvidiousList);
-GM_registerMenuCommand('Inviduous: Toggle proxy state', toggleInvidiousProxy);
+GM_registerMenuCommand('Invidious: Toggle proxy state', toggleInvidiousProxy);
 GM_registerMenuCommand('Nitter: Set instance', setNitterInstance);
 GM_registerMenuCommand('Nitter: Show known instances', openNitterList);
+GM_registerMenuCommand('Scribe: Set instance', setScribeInstance);
+GM_registerMenuCommand('Scribe: Show known instances', openScribeList);
 GM_registerMenuCommand('Teddit: Set instance', setTedditInstance);
 GM_registerMenuCommand('Teddit: Show known instances', openTedditList);
 GM_registerMenuCommand('Toggle rewrite on hover', toggleRewriteOnHover);
