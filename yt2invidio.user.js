@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.0
+// @version     2.4.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -33,8 +33,8 @@ GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(function(result) {
 function init(config) {
   cfg = JSON.parse(config);
   for (i in defaultConfig.hosts)
-		if (cfg.hosts[i] == undefined)
-			cfg.hosts[i] = defaultConfig.hosts[i];
+    if (cfg.hosts[i] == undefined)
+      cfg.hosts[i] = defaultConfig.hosts[i];
   cfg.invProxy = cfg.invProxy || defaultConfig.invProxy;
   cfg.onHover = cfg.onHover || defaultConfig.onHover;
   console.log(
@@ -189,7 +189,9 @@ function toggleRewriteOnHover() {
   });
 }
 function toggleInvidiousProxy() {
-  toggle('invProxy');
+  toggle('invProxy').then((result) => {
+    alert('Proxy videos is '+ (result ? 'enabled' : 'disabled'));
+  });
 }
 
 async function toggle(setting) {
