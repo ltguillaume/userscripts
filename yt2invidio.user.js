@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.1
+// @version     2.4.2
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -137,9 +137,9 @@ function rewriteEmbeddedLinks() {
         else
           embProxy = '&local='+ cfg.invProxy;
         if (dataSrc)
-          iframes[i].setAttribute('data-s9e-mediaembed-src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy);
+          iframes[i].setAttribute('data-s9e-mediaembed-src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy +'&autoplay=0');
         else
-          iframes[i].setAttribute('src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy);
+          iframes[i].setAttribute('src', 'https://'+ cfg.hosts.invidious+RegExp.$3 + embProxy +'&autoplay=0');
 //      iframes[i].setAttribute('style', 'min-height:100%; min-width:100%;');
         iframes[i].setAttribute('frameborder', '0');
         iframes[i].setAttribute('allowfullscreen', '1');
@@ -147,7 +147,7 @@ function rewriteEmbeddedLinks() {
       }
     }
   }
-  console.log('Rewrote '+ count +' of '+ iframes.length +' embedded links.');
+  console.log('Rewrote '+ count +' of '+ iframes.length +' embedded links in '+ document.URL);
 }
 
 function setInvidiousInstance() {
