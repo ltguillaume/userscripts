@@ -5,11 +5,11 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.2
+// @version     2.4.3
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
-// @grant       GM_registerMenuCommand
+// @grant       GM.registerMenuCommand
 // @grant       GM.openInTab
 // @grant       unsafeWindow
 // @homepageURL https://codeberg.org/ltGuillaume/yt2invidio
@@ -223,17 +223,17 @@ function openScribeList() {
   GM.openInTab('https://sr.ht/~edwardloveall/scribe/', { active: true, insert: true });
 }
 
-GM_registerMenuCommand('Bibliogram: Set instance', setBibliogramInstance);
-GM_registerMenuCommand('Bibliogram: Show known instances', openBibliogramList);
-GM_registerMenuCommand('Imgin: Set instance', setImginInstance);
-GM_registerMenuCommand('Imgin: Show known instances', openImginList);
-GM_registerMenuCommand('Invidious: Set instance', setInvidiousInstance);
-GM_registerMenuCommand('Invidious: Show known instances', openInvidiousList);
-GM_registerMenuCommand('Invidious: Toggle proxy state', toggleInvidiousProxy);
-GM_registerMenuCommand('Nitter: Set instance', setNitterInstance);
-GM_registerMenuCommand('Nitter: Show known instances', openNitterList);
-GM_registerMenuCommand('Scribe: Set instance', setScribeInstance);
-GM_registerMenuCommand('Scribe: Show known instances', openScribeList);
-GM_registerMenuCommand('Teddit: Set instance', setTedditInstance);
-GM_registerMenuCommand('Teddit: Show known instances', openTedditList);
-GM_registerMenuCommand('Toggle rewrite on hover', toggleRewriteOnHover);
+GM.registerMenuCommand('Bibliogram: Set instance', setBibliogramInstance);
+GM.registerMenuCommand('Bibliogram: Show known instances', openBibliogramList);
+GM.registerMenuCommand('Imgin: Set instance', setImginInstance);
+GM.registerMenuCommand('Imgin: Show known instances', openImginList);
+GM.registerMenuCommand('Invidious: Set instance', setInvidiousInstance);
+GM.registerMenuCommand('Invidious: Show known instances', openInvidiousList);
+GM.registerMenuCommand('Invidious: Toggle proxy state', toggleInvidiousProxy);
+GM.registerMenuCommand('Nitter: Set instance', setNitterInstance);
+GM.registerMenuCommand('Nitter: Show known instances', openNitterList);
+GM.registerMenuCommand('Scribe: Set instance', setScribeInstance);
+GM.registerMenuCommand('Scribe: Show known instances', openScribeList);
+GM.registerMenuCommand('Teddit: Set instance', setTedditInstance);
+GM.registerMenuCommand('Teddit: Show known instances', openTedditList);
+GM.registerMenuCommand('Toggle rewrite on hover', toggleRewriteOnHover);
