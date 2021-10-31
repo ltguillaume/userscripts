@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.3
+// @version     2.4.4
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -88,7 +88,7 @@ function rewriteLink(elem) {
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'&local='+ cfg.invProxy;
   else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtu.be\/([a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious +'/watch?v='+ RegExp.$3 +'?local='+ cfg.invProxy;
-  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube.com(\/channel\/[a-z0-9_-]+)/i))
+  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube.com(\/(c|channel)\/[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'?local='+ cfg.invProxy;
 
   // Nitter
@@ -131,7 +131,7 @@ function rewriteEmbeddedLinks() {
         dataSrc = true;
       }
       if (src == null) continue;
-      if (src.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube.com(\/(channel|embed)\/[a-z0-9_-]+)/i)) {
+      if (src.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube.com(\/(c|channel|embed)\/[a-z0-9_-]+)/i)) {
         if (RegExp.$4 == 'channel' || RegExp.$4 == 'embed')
           embProxy = '?local='+ cfg.invProxy;
         else
