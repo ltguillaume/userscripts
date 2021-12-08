@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.4
+// @version     2.4.5
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -220,7 +220,7 @@ function openImginList() {
   GM.openInTab('https://git.voidnet.tech/kev/imgin', { active: true, insert: true });
 }
 function openScribeList() {
-  GM.openInTab('https://sr.ht/~edwardloveall/scribe/', { active: true, insert: true });
+  GM.openInTab('https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md', { active: true, insert: true });
 }
 
 GM.registerMenuCommand('Bibliogram: Set instance', setBibliogramInstance);
