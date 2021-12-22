@@ -214,7 +214,7 @@ function openBibliogramList() {
   GM.openInTab('https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md', { active: true, insert: true });
 }
 function openTedditList() {
-  GM.openInTab('https://codeberg.org/teddit/teddit', { active: true, insert: true });
+  GM.openInTab('https://codeberg.org/teddit/teddit#instances', { active: true, insert: true });
 }
 function openImginList() {
   GM.openInTab('https://git.voidnet.tech/kev/imgin', { active: true, insert: true });
