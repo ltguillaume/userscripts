@@ -202,17 +202,18 @@ function openInstancesList(service) {
   GM.openInTab(instancesLists[service], { active: true, insert: true });
 }
 
-GM.registerMenuCommand('Bibliogram: Set instance',         () => setInstance('bibliogram'));
-GM.registerMenuCommand('Bibliogram: Show known instances', () => openInstancesList('bibliogram'));
-GM.registerMenuCommand('Imgin: Set instance',              () => setInstance('imgin'));
-GM.registerMenuCommand('Imgin: Show known instances',      () => openInstancesList('imgin'));
-GM.registerMenuCommand('Invidious: Set instance',          () => setInstance('invidious'));
-GM.registerMenuCommand('Invidious: Show known instances',  () => openInstancesList('invidious'));
-GM.registerMenuCommand('Invidious: Toggle proxy state',    toggleInvidiousProxy);
-GM.registerMenuCommand('Nitter: Set instance',             () => setInstance('nitter'));
-GM.registerMenuCommand('Nitter: Show known instances',     () => openInstancesList('nitter'));
-GM.registerMenuCommand('Scribe: Set instance',             () => setInstance('scribe'));
-GM.registerMenuCommand('Scribe: Show known instances',     () => openInstancesList('scribe'));
-GM.registerMenuCommand('Teddit: Set instance',             () => setInstance('teddit'));
-GM.registerMenuCommand('Teddit: Show known instances',     () => openInstancesList('teddit'));
-GM.registerMenuCommand('Toggle rewrite on hover',          toggleRewriteOnHover);
+GM.registerMenuCommand('All working instances',    () => GM.openInTab('https://farside.link'));
+GM.registerMenuCommand('Bibliogram instance',      () => setInstance('bibliogram'));
+//GM.registerMenuCommand('Bibliogram instance list', () => openInstancesList('bibliogram'));
+GM.registerMenuCommand('Imgin instance',           () => setInstance('imgin'));
+//GM.registerMenuCommand('Imgin instance list',      () => openInstancesList('imgin'));
+GM.registerMenuCommand('Invidious instance',       () => setInstance('invidious'));
+//GM.registerMenuCommand('Invidious instance list',  () => openInstancesList('invidious'));
+GM.registerMenuCommand('Toggle Invidious proxy',   toggleInvidiousProxy);
+GM.registerMenuCommand('Nitter instance',          () => setInstance('nitter'));
+//GM.registerMenuCommand('Nitter instance list',     () => openInstancesList('nitter'));
+GM.registerMenuCommand('Scribe instance',          () => setInstance('scribe'));
+//GM.registerMenuCommand('Scribe instance list',     () => openInstancesList('scribe'));
+GM.registerMenuCommand('Teddit instance',          () => setInstance('teddit'));
+//GM.registerMenuCommand('Teddit instance list',     () => openInstancesList('teddit'));
+GM.registerMenuCommand('Toggle rewrite on hover',  toggleRewriteOnHover);
