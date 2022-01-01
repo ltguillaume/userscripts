@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.5
+// @version     2.4.6
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -173,7 +173,7 @@ async function setInstance(host) {
   let cfgs = await GM.getValue('YT2IConfig', JSON.stringify(defaultConfig));
   cfg = JSON.parse(cfgs);
   var vhost = prompt('Set '+ host +' instance to:', cfg.hosts[host]);
-  if (vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)(\/.*)?$/)) {
+  if (vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)$/)) {
     if (vhost == '')
       cfg.hosts[host] = '';
     else
