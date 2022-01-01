@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.4.6
+// @version     2.5.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -25,7 +25,7 @@ const defaultConfig = {
 const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com' };
 var cfg;
 
-GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(function(result) {
+GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(result => {
   init(result);
   rewriteEmbeddedLinks();
 });
@@ -169,38 +169,40 @@ function setScribeInstance() {
   setInstance('scribe');
 }
 
-async function setInstance(host) {
-  let cfgs = await GM.getValue('YT2IConfig', JSON.stringify(defaultConfig));
-  cfg = JSON.parse(cfgs);
-  var vhost = prompt('Set '+ host +' instance to:', cfg.hosts[host]);
-  if (vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)$/)) {
-    if (vhost == '')
-      cfg.hosts[host] = '';
-    else
-      cfg.hosts[host] = RegExp.$2;
-    init(JSON.stringify(cfg));
-    GM.setValue('YT2IConfig', JSON.stringify(cfg));
-  }
+function setInstance(host) {
+  GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(cfgs => {
+    cfg = JSON.parse(cfgs);
+    var vhost = prompt('Set '+ host +' instance to:', cfg.hosts[host]);
+    if (vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)$/)) {
+      if (vhost == '')
+        cfg.hosts[host] = '';
+      else
+        cfg.hosts[host] = RegExp.$2;
+      init(JSON.stringify(cfg));
+      GM.setValue('YT2IConfig', JSON.stringify(cfg));
+    }
+  });
 }
 
 function toggleRewriteOnHover() {
-  toggle('onHover').then((result) => {
+  toggle('onHover').then(result => {
     alert('Rewriting on '+ (result ? 'hover' : 'click'));
   });
 }
 function toggleInvidiousProxy() {
-  toggle('invProxy').then((result) => {
+  toggle('invProxy').then(result => {
     alert('Proxy videos is '+ (result ? 'enabled' : 'disabled'));
   });
 }
 
-async function toggle(setting) {
-  let cfgs = await GM.getValue('YT2IConfig', JSON.stringify(defaultConfig));
-  cfg = JSON.parse(cfgs);
-  cfg[setting] ^= 1;
-  console.log('Setting '+ setting + ' has been turned '+ (cfg[setting] ? 'ON' : 'OFF'));
-  GM.setValue('YT2IConfig', JSON.stringify(cfg));
-  return cfg[setting];
+function toggle(setting) {
+  GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(cfgs => {
+    cfg = JSON.parse(cfgs);
+    cfg[setting] ^= 1;
+    console.log('Setting '+ setting + ' has been turned '+ (cfg[setting] ? 'ON' : 'OFF'));
+    GM.setValue('YT2IConfig', JSON.stringify(cfg));
+    return cfg[setting];
+  });
 }
 
 // Open tab with instance list/info page
