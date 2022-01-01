@@ -16,13 +16,24 @@
 // @downloadURL https://codeberg.org/ltGuillaume/yt2invidio/raw/master/yt2invidio.user.js
 // ==/UserScript==
 
+
+// Constants
+const instancesLists = {
+  invidious:  'https://github.com/iv-org/documentation/blob/master/Invidious-Instances.md',
+  nitter:     'https://github.com/zedeus/nitter/wiki/Instances',
+  bibliogram: 'https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md',
+  teddit:     'https://codeberg.org/teddit/teddit#instances',
+  imgin:      'https://git.voidnet.tech/kev/imgin',
+  scribe:     'https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md' },
+
+  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com' };
+
 // Default config
 const defaultConfig = {
   hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech', scribe: 'scribe.rip' },
   invProxy: 0,
   onHover: 0
 };
-const orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com' };
 var cfg;
 
 GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(result => {
@@ -186,37 +197,22 @@ function toggle(setting) {
   });
 }
 
-// Open tab with instance list/info page
-function openInvidiousList() {
-  GM.openInTab('https://github.com/iv-org/documentation/blob/master/Invidious-Instances.md', { active: true, insert: true });
-}
-function openNitterList() {
-  GM.openInTab('https://github.com/zedeus/nitter/wiki/Instances', { active: true, insert: true });
-}
-function openBibliogramList() {
-  GM.openInTab('https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md', { active: true, insert: true });
-}
-function openTedditList() {
-  GM.openInTab('https://codeberg.org/teddit/teddit#instances', { active: true, insert: true });
-}
-function openImginList() {
-  GM.openInTab('https://git.voidnet.tech/kev/imgin', { active: true, insert: true });
-}
-function openScribeList() {
-  GM.openInTab('https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md', { active: true, insert: true });
+// Open tab with instances list
+function openInstancesList(service) {
+  GM.openInTab(instancesLists[service], { active: true, insert: true });
 }
 
-GM.registerMenuCommand('Bibliogram: Set instance', () => setInstance('bibliogram'));
-GM.registerMenuCommand('Bibliogram: Show known instances', openBibliogramList);
-GM.registerMenuCommand('Imgin: Set instance', () => setInstance('imgin'));
-GM.registerMenuCommand('Imgin: Show known instances', openImginList);
-GM.registerMenuCommand('Invidious: Set instance', () => setInstance('invidious'));
-GM.registerMenuCommand('Invidious: Show known instances', openInvidiousList);
-GM.registerMenuCommand('Invidious: Toggle proxy state', toggleInvidiousProxy);
-GM.registerMenuCommand('Nitter: Set instance', () => setInstance('nitter'));
-GM.registerMenuCommand('Nitter: Show known instances', openNitterList);
-GM.registerMenuCommand('Scribe: Set instance', () => setInstance('scribe'));
-GM.registerMenuCommand('Scribe: Show known instances', openScribeList);
-GM.registerMenuCommand('Teddit: Set instance', () => setInstance('teddit'));
-GM.registerMenuCommand('Teddit: Show known instances', openTedditList);
-GM.registerMenuCommand('Toggle rewrite on hover', toggleRewriteOnHover);
+GM.registerMenuCommand('Bibliogram: Set instance',         () => setInstance('bibliogram'));
+GM.registerMenuCommand('Bibliogram: Show known instances', () => openInstancesList('bibliogram'));
+GM.registerMenuCommand('Imgin: Set instance',              () => setInstance('imgin'));
+GM.registerMenuCommand('Imgin: Show known instances',      () => openInstancesList('imgin'));
+GM.registerMenuCommand('Invidious: Set instance',          () => setInstance('invidious'));
+GM.registerMenuCommand('Invidious: Show known instances',  () => openInstancesList('invidious'));
+GM.registerMenuCommand('Invidious: Toggle proxy state',    toggleInvidiousProxy);
+GM.registerMenuCommand('Nitter: Set instance',             () => setInstance('nitter'));
+GM.registerMenuCommand('Nitter: Show known instances',     () => openInstancesList('nitter'));
+GM.registerMenuCommand('Scribe: Set instance',             () => setInstance('scribe'));
+GM.registerMenuCommand('Scribe: Show known instances',     () => openInstancesList('scribe'));
+GM.registerMenuCommand('Teddit: Set instance',             () => setInstance('teddit'));
+GM.registerMenuCommand('Teddit: Show known instances',     () => openInstancesList('teddit'));
+GM.registerMenuCommand('Toggle rewrite on hover',          toggleRewriteOnHover);
