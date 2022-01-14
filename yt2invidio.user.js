@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe. Use alt+click to open original links, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.5.0
+// @version     2.6.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -24,13 +24,14 @@ const instancesLists = {
   bibliogram: 'https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md',
   teddit:     'https://codeberg.org/teddit/teddit#instances',
   imgin:      'https://git.voidnet.tech/kev/imgin',
-  scribe:     'https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md' },
+  scribe:     'https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md',
+  proxitok:   'https://github.com/pablouser1/ProxiTok' },
 
-  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com' };
+  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com', tiktok: 'tiktok.com' };
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech', scribe: 'scribe.rip' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com' },
   invProxy: 0,
   onHover: 0
 };
@@ -55,6 +56,7 @@ function init(config) {
     +'\nTeddit: '+ cfg.hosts.teddit
     +'\nImgin: '+ cfg.hosts.imgin
     +'\nScribe: '+ cfg.hosts.scribe
+    +'\nProxiTok: '+ cfg.hosts.proxitok
     +'\nRewriting on '+ (cfg.onHover ? 'hover' : 'click')
   );
 
@@ -95,11 +97,11 @@ function openOriginalHost(e) {
 function rewriteLink(elem) {
   var before = elem.href;
   // Only rewrite if we're not on Invidious already (to keep the "Watch this on YouTube" links intact)
-  if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i))
+  if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'&local='+ cfg.invProxy;
-  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtu.be\/([a-z0-9_-]+)/i))
+  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtu\.be\/([a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious +'/watch?v='+ RegExp.$3 +'?local='+ cfg.invProxy;
-  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube.com(\/(c|channel)\/[a-z0-9_-]+)/i))
+  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube\.com(\/(c|channel)\/[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'?local='+ cfg.invProxy;
 
   // Nitter
@@ -113,16 +115,20 @@ function rewriteLink(elem) {
     elem.href = 'https://'+ cfg.hosts.bibliogram +'/u/' + RegExp.$2;
 
   // Teddit
-  else if (cfg.hosts.teddit != '' && elem.href.match(/((www|old)\.)?reddit.com\/(.*)/i) && elem.href.indexOf('/duplicates/') == -1)
+  else if (cfg.hosts.teddit != '' && elem.href.match(/((www|old)\.)?reddit\.com\/(.*)/i) && elem.href.indexOf('/duplicates/') == -1)
     elem.href = 'https://'+ cfg.hosts.teddit +'/'+ RegExp.$3;
 
   // Imgin
-  else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur.com\/(.*)/i))
+  else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur\.com\/(.*)/i))
     elem.href = 'https://'+ cfg.hosts.imgin +'/'+ RegExp.$3;
 
   // Scribe
-  else if (cfg.hosts.scribe != '' && elem.href.match(/((.*)\.)?medium.com\/(.*)/i))
-    elem.href = 'https://'+ cfg.hosts.scribe +'/'+ RegExp.$3;
+  else if (cfg.hosts.scribe != '' && elem.href.match(/(.*\.)?medium\.com\/(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.scribe +'/'+ RegExp.$2;
+
+  // ProxiTok
+  else if (cfg.hosts.tiktok != '' && elem.href.match(/((www|vm)\.)?tiktok\.com\/(@.*\/video\/)?(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.proxitok +'/video/'+ RegExp.$4;
 
   if (elem.href != before) {
     elem.hreflang = before;
@@ -142,7 +148,7 @@ function rewriteEmbeddedLinks() {
         dataSrc = true;
       }
       if (src == null) continue;
-      if (src.match(/((www|m)\.)?youtube.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube.com(\/(c|channel|embed)\/[a-z0-9_-]+)/i)) {
+      if (src.match(/((www|m)\.)?youtube\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube\.com(\/(c|channel|embed)\/[a-z0-9_-]+)/i)) {
         if (RegExp.$4 == 'channel' || RegExp.$4 == 'embed')
           embProxy = '?local='+ cfg.invProxy;
         else
@@ -164,7 +170,7 @@ function rewriteEmbeddedLinks() {
 function setInstance(service) {
   GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(cfgs => {
     cfg = JSON.parse(cfgs);
-    var vhost = prompt('Set '+ service +' instance to:', cfg.hosts[service]);
+    var vhost = prompt('Set '+ service +' instance to... (clear to disable rewrites)', cfg.hosts[service]);
     if (vhost == '' || vhost.match(/^(https?)?:?[\/]*(.+?)$/)) {
       if (vhost == '')
         cfg.hosts[service] = '';
@@ -214,6 +220,8 @@ GM.registerMenuCommand('Nitter instance',          () => setInstance('nitter'));
 //GM.registerMenuCommand('Nitter instance list',     () => openInstancesList('nitter'));
 GM.registerMenuCommand('Scribe instance',          () => setInstance('scribe'));
 //GM.registerMenuCommand('Scribe instance list',     () => openInstancesList('scribe'));
+GM.registerMenuCommand('ProxiTok instance',          () => setInstance('proxitok'));
+//GM.registerMenuCommand('ProxiTok instance list',     () => openInstancesList('proxitok'));
 GM.registerMenuCommand('Teddit instance',          () => setInstance('teddit'));
 //GM.registerMenuCommand('Teddit instance list',     () => openInstancesList('teddit'));
 GM.registerMenuCommand('Toggle rewrite on hover',  toggleRewriteOnHover);
