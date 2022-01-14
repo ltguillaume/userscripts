@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.6.0
+// @version     2.6.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -90,6 +90,8 @@ function openOriginalHost(e) {
       var host = cfg.hosts[i];
       if (host.length && location.href.indexOf('https://'+ host) == 0)
         return location.assign(location.href.replace(host, orgHosts[i]));
+      if (location.href.indexOf('https://'+ i) == 0)
+        return location.assign(location.href.replace(location.origin, 'https://'+ orgHosts[i]));
     }
   }
 }
