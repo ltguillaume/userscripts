@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.6.1
+// @version     2.6.2
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -117,8 +117,8 @@ function rewriteLink(elem) {
     elem.href = 'https://'+ cfg.hosts.bibliogram +'/u/' + RegExp.$2;
 
   // Teddit
-  else if (cfg.hosts.teddit != '' && elem.href.match(/((www|old)\.)?reddit\.com\/(.*)/i) && elem.href.indexOf('/duplicates/') == -1)
-    elem.href = 'https://'+ cfg.hosts.teddit +'/'+ RegExp.$3;
+  else if (cfg.hosts.teddit != '' && !elem.href.match(/\/(duplicates\/|submit\?selftext|submit$|create$)/i) && elem.href.match(/(www\.|old\.)?reddit\.com(?!\/message|\/chat|\/prefs|\/gold)(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.teddit + RegExp.$2 + RegExp.$3;
 
   // Imgin
   else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur\.com\/(.*)/i))
