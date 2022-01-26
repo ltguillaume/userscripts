@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.6.2
+// @version     2.6.3
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -196,12 +196,14 @@ function toggleInvidiousProxy() {
 }
 
 function toggle(setting) {
-  GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(cfgs => {
-    cfg = JSON.parse(cfgs);
-    cfg[setting] ^= 1;
-    console.log('Setting '+ setting + ' has been turned '+ (cfg[setting] ? 'ON' : 'OFF'));
-    GM.setValue('YT2IConfig', JSON.stringify(cfg));
-    return cfg[setting];
+  return new Promise(function(resolve) {
+    GM.getValue('YT2IConfig', JSON.stringify(defaultConfig)).then(cfgs => {
+      cfg = JSON.parse(cfgs);
+      cfg[setting] ^= 1;
+      console.log('Setting '+ setting + ' has been turned '+ (cfg[setting] ? 'ON' : 'OFF'));
+      GM.setValue('YT2IConfig', JSON.stringify(cfg));
+      resolve(cfg[setting]);
+    });
   });
 }
 
