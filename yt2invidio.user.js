@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Imgin, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgu, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.6.3
+// @version     2.7.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -23,15 +23,15 @@ const instancesLists = {
   nitter:     'https://github.com/zedeus/nitter/wiki/Instances',
   bibliogram: 'https://git.sr.ht/~cadence/bibliogram-docs/tree/master/docs/Instances.md',
   teddit:     'https://codeberg.org/teddit/teddit#instances',
-  imgin:      'https://git.voidnet.tech/kev/imgin',
+  rimgu:      'https://codeberg.org/video-prize-ranch/rimgo#instances',
   scribe:     'https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md',
   proxitok:   'https://github.com/pablouser1/ProxiTok' },
 
-  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', imgin: 'imgur.com', scribe: 'medium.com', tiktok: 'tiktok.com' };
+  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', rimgu: 'imgur.com', scribe: 'medium.com', tiktok: 'tiktok.com' };
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', imgin: 'imgin.voidnet.tech', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', rimgu: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com' },
   invProxy: 0,
   onHover: 0
 };
@@ -54,7 +54,7 @@ function init(config) {
     +'\nNitter: '+ cfg.hosts.nitter
     +'\nBibliogram: '+ cfg.hosts.bibliogram
     +'\nTeddit: '+ cfg.hosts.teddit
-    +'\nImgin: '+ cfg.hosts.imgin
+    +'\nRimgu: '+ cfg.hosts.rimgu
     +'\nScribe: '+ cfg.hosts.scribe
     +'\nProxiTok: '+ cfg.hosts.proxitok
     +'\nRewriting on '+ (cfg.onHover ? 'hover' : 'click')
@@ -120,9 +120,9 @@ function rewriteLink(elem) {
   else if (cfg.hosts.teddit != '' && !elem.href.match(/\/(duplicates\/|submit\?selftext|submit$|create$)/i) && elem.href.match(/(www\.|old\.)?reddit\.com(?!\/message|\/chat|\/prefs|\/gold)(.*)/i))
     elem.href = 'https://'+ cfg.hosts.teddit + RegExp.$2 + RegExp.$3;
 
-  // Imgin
-  else if (cfg.hosts.imgin != '' && elem.href.match(/((www|i)\.)?imgur\.com\/(.*)/i))
-    elem.href = 'https://'+ cfg.hosts.imgin +'/'+ RegExp.$3;
+  // Rimgu
+  else if (cfg.hosts.rimgu != '' && elem.href.match(/((www|i)\.)?imgur\.com\/(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.rimgu +'/'+ RegExp.$3;
 
   // Scribe
   else if (cfg.hosts.scribe != '' && elem.href.match(/(.*\.)?medium\.com\/(.*)/i))
@@ -215,8 +215,8 @@ function openInstancesList(service) {
 GM.registerMenuCommand('All working instances',    () => GM.openInTab('https://farside.link'));
 GM.registerMenuCommand('Bibliogram instance',      () => setInstance('bibliogram'));
 //GM.registerMenuCommand('Bibliogram instance list', () => openInstancesList('bibliogram'));
-GM.registerMenuCommand('Imgin instance',           () => setInstance('imgin'));
-//GM.registerMenuCommand('Imgin instance list',      () => openInstancesList('imgin'));
+GM.registerMenuCommand('Rimgu instance',           () => setInstance('rimgu'));
+//GM.registerMenuCommand('Rimgu instance list',      () => openInstancesList('rimgu'));
 GM.registerMenuCommand('Invidious instance',       () => setInstance('invidious'));
 //GM.registerMenuCommand('Invidious instance list',  () => openInstancesList('invidious'));
 GM.registerMenuCommand('Toggle Invidious proxy',   toggleInvidiousProxy);
