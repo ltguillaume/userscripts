@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgu, Medium to Scribe, TikTok to ProxiTok. Use alt+click to open original links, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.7.0
+// @version     2.7.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -31,7 +31,7 @@ const instancesLists = {
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'bibliogram.pussthecat.org', teddit: 'teddit.net', rimgu: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'farside.link/_/bibliogram', teddit: 'teddit.net', rimgu: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com' },
   invProxy: 0,
   onHover: 0
 };
