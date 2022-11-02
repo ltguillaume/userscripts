@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki. Use Alt+click to open in original service, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki, IMDb to libremdb. Use Alt+click to open in original service, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.8.2
+// @version     2.9.0
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -26,14 +26,15 @@ const instancesLists = {
   rimgo:      'https://codeberg.org/video-prize-ranch/rimgo#instances',
   scribe:     'https://git.sr.ht/~edwardloveall/scribe/tree/main/docs/instances.md',
   proxitok:   'https://github.com/pablouser1/ProxiTok',
-  breezewiki: 'https://docs.breezewiki.com/Links.html#(part._.Instances)'
+  breezewiki: 'https://docs.breezewiki.com/Links.html#(part._.Instances)',
+  libremdb:   'https://github.com/zyachel/libremdb#instances'
 },
 
-  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', rimgo: 'imgur.com', scribe: 'medium.com', proxitok: 'tiktok.com', breezewiki: 'fandom.com' };
+  orgHosts = { invidious: 'youtu.be', nitter: 'twitter.com', bibliogram: 'instagram.com', teddit: 'old.reddit.com', rimgo: 'imgur.com', scribe: 'medium.com', proxitok: 'tiktok.com', breezewiki: 'fandom.com', libremdb: 'imdb.com' };
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'farside.link/_/bibliogram', teddit: 'teddit.net', rimgo: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com', breezewiki: 'breezewiki.pussthecat.org' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'farside.link/_/bibliogram', teddit: 'teddit.net', rimgo: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com', breezewiki: 'breezewiki.pussthecat.org', libremdb: 'libremdb.pussthecat.org' },
   invProxy: 0,
   onHover: 0
 };
@@ -52,15 +53,17 @@ function init(config) {
   cfg.invProxy = cfg.invProxy || defaultConfig.invProxy;
   cfg.onHover = cfg.onHover || defaultConfig.onHover;
   console.log(
-    'Invidious: '+ cfg.hosts.invidious +', invProxy: '+ cfg.invProxy
-    +'\nNitter: '+ cfg.hosts.nitter
-    +'\nBibliogram: '+ cfg.hosts.bibliogram
-    +'\nTeddit: '+ cfg.hosts.teddit
-    +'\nRimgo: '+ cfg.hosts.rimgo
-    +'\nScribe: '+ cfg.hosts.scribe
-    +'\nProxiTok: '+ cfg.hosts.proxitok
-    +'\nBreezeWiki: '+ cfg.hosts.breezewiki
-    +'\nRewriting on '+ (cfg.onHover ? 'hover' : 'click')
+    'Invidious:',     cfg.hosts.invidious,
+    ', invProxy: ',   cfg.invProxy,
+    '\nNitter:',      cfg.hosts.nitter,
+    '\nBibliogram:',  cfg.hosts.bibliogram,
+    '\nTeddit:',      cfg.hosts.teddit,
+    '\nRimgo:',       cfg.hosts.rimgo,
+    '\nScribe:',      cfg.hosts.scribe,
+    '\nProxiTok:',    cfg.hosts.proxitok,
+    '\nBreezeWiki:',  cfg.hosts.breezewiki,
+    '\nlibremdb:',    cfg.hosts.libremdb,
+    '\nRewriting on', cfg.onHover ? 'hover' : 'click'
   );
 
   if (cfg.onHover)
@@ -138,6 +141,10 @@ function rewriteLink(elem) {
   // BreezeWiki
   else if (cfg.hosts.breezewiki != '' && elem.href.match(/:\/\/(.*)?\.fandom\.com\/(.*)/i))
     elem.href = 'https://'+ cfg.hosts.breezewiki +'/'+ RegExp.$1 +'/'+ RegExp.$2;
+
+  // libremdb
+  else if (cfg.hosts.libremdb != '' && elem.href.match(/:\/\/(?:.*)?\.imdb\.com\/(.*)/i))
+    elem.href = 'https://'+ cfg.hosts.libremdb +'/'+ RegExp.$1;
 
   if (elem.href != before) {
     elem.hreflang = before;
@@ -229,6 +236,8 @@ GM.registerMenuCommand('Rimgo instance',           () => setInstance('rimgo'));
 GM.registerMenuCommand('Invidious instance',       () => setInstance('invidious'));
 //GM.registerMenuCommand('Invidious instance list',  () => openInstancesList('invidious'));
 GM.registerMenuCommand('Toggle Invidious proxy',   toggleInvidiousProxy);
+GM.registerMenuCommand('libremdb instance',      () => setInstance('libremdb'));
+//GM.registerMenuCommand('libremdb instance list', () => openInstancesList('libremdb'));
 GM.registerMenuCommand('Nitter instance',          () => setInstance('nitter'));
 //GM.registerMenuCommand('Nitter instance list',     () => openInstancesList('nitter'));
 GM.registerMenuCommand('Scribe instance',          () => setInstance('scribe'));
