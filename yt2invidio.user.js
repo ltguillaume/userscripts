@@ -2,10 +2,10 @@
 // @name        YT2Invidio
 // @namespace   de.izzysoft
 // @author      Izzy + ltGuillaume
-// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki, IMDb to libremdb. Use Alt+click to open in original service, or alt+o in the instances to open the the original site.
+// @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki, IMDb to libremdb. Use Ctrl+Alt+click to open in original service, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.9.0
+// @version     2.9.1
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -79,7 +79,7 @@ function triggerRewrite(e) {
   if (e.button == 2) return; // Right-click
   for (var link of document.links)
     if (link == e.target || link.contains(e.target)) {
-      if (e.altKey) {
+      if (e.altKey && e.ctrlKey) {
         if (link.hreflang.indexOf('https://') == 0) {
           link.href = link.hreflang;
           link.hreflang = '';
