@@ -105,11 +105,11 @@ function openOriginalHost(e) {
 function rewriteLink(elem) {
   var before = elem.href;
   // Only rewrite if we're not on Invidious already (to keep the "Watch this on YouTube" links intact)
-  if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube(?:-nocookie)\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i))
+  if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube(?:-nocookie)?\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'&local='+ cfg.invProxy;
   else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtu\.be\/([a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious +'/watch?v='+ RegExp.$3 +'?local='+ cfg.invProxy;
-  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube(?:-nocookie)\.com(\/(c|channel)\/[a-z0-9_-]+)/i))
+  else if (cfg.hosts.invidious != '' && elem.href.match(/((www|m)\.)?youtube(?:-nocookie)?\.com(\/(c|channel)\/[a-z0-9_-]+)/i))
     elem.href='https://'+ cfg.hosts.invidious+RegExp.$3 +'?local='+ cfg.invProxy;
 
   // Nitter
@@ -164,7 +164,7 @@ function rewriteEmbeddedLinks() {
         dataSrc = true;
       }
       if (src == null) continue;
-      if (src.match(/((www|m)\.)?youtube(?:-nocookie)?\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube(?:-nocookie)\.com(\/(c|channel|embed)\/[a-z0-9_-]+)/i)) {
+      if (src.match(/((www|m)\.)?youtube(?:-nocookie)?\.com(\/(watch\?v|playlist\?list)=[a-z0-9_-]+)/i) || src.match(/((www|m)\.)?youtube(?:-nocookie)?\.com(\/(c|channel|embed)\/[a-z0-9_-]+)/i)) {
         if (RegExp.$4 == 'channel' || RegExp.$4 == 'embed')
           embProxy = '?local='+ cfg.invProxy;
         else
