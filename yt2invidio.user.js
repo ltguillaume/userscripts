@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki, IMDb to libremdb. Use Ctrl+Alt+click to open in original service, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.9.1
+// @version     2.9.2
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -143,7 +143,7 @@ function rewriteLink(elem) {
     elem.href = 'https://'+ cfg.hosts.breezewiki +'/'+ RegExp.$1 +'/'+ RegExp.$2;
 
   // libremdb
-  else if (cfg.hosts.libremdb != '' && elem.href.match(/:\/\/(?:.*)?\.imdb\.com\/(.*)/i))
+  else if (cfg.hosts.libremdb != '' && elem.href.match(/:\/\/(?:.*)?\.imdb\.com\/(title\/.*)/i))
     elem.href = 'https://'+ cfg.hosts.libremdb +'/'+ RegExp.$1;
 
   if (elem.href != before) {
