@@ -5,7 +5,7 @@
 // @description Point YouTube links to Invidious, Twitter to Nitter, Instagram to Bibliogram, Reddit to Teddit, Imgur to Rimgo, Medium to Scribe, TikTok to ProxiTok, Fandom to BreezeWiki, IMDb to libremdb. Use Ctrl+Alt+click to open in original service, or alt+o in the instances to open the the original site.
 // @license     CC BY-NC-SA
 // @include     *
-// @version     2.9.2
+// @version     2.9.3
 // @run-at      document-idle
 // @grant       GM.getValue
 // @grant       GM.setValue
@@ -34,7 +34,7 @@ const instancesLists = {
 
 // Default config
 const defaultConfig = {
-  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'farside.link/_/bibliogram', teddit: 'teddit.net', rimgo: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.herokuapp.com', breezewiki: 'breezewiki.pussthecat.org', libremdb: 'libremdb.pussthecat.org' },
+  hosts: { invidious: 'yewtu.be', nitter: 'nitter.net', bibliogram: 'farside.link/_/bibliogram', teddit: 'teddit.net', rimgo: 'rimgo.pussthecat.org', scribe: 'scribe.rip', proxitok: 'proxitok.pabloferreiro.es', breezewiki: 'breezewiki.pussthecat.org', libremdb: 'libremdb.pussthecat.org' },
   invProxy: 0,
   onHover: 0
 };
