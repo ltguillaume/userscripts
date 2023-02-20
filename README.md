@@ -1,5 +1,10 @@
-YT2Invidio userscript development. Original script by [Izzy](https://codeberg.org/izzy/userscripts).
+<img width="128" src="SCRIPT.png" align="right">
 
-If you want to use random service instances from a curated list, you can set the instance URL to `farside.link/_/<service>`, e.g. `farside.link/_/bibliogram`. If you experience problems with the loaded instance, just press back in your browser and another instance will be used.
+# Userscripts
+by ltGuillaume: [Codeberg](https://codeberg.org/ltGuillaume) | [GitHub](https://github.com/ltGuillaume) | [Buy me a beer](https://buymeacoff.ee/ltGuillaume) 🍺
 
-You can also set up your own instance of [Farside](https://github.com/benbusby/farside) by Ben Busby.
+Collection of userscripts made or forked by me (ltGuillaume).  
+This repo was originally forked for further development of [Izzy's YT2Invidio](https://codeberg.org/izzy/userscripts) userscript.
+
+## Credits
+* [Script](https://www.flaticon.com/free-icon/script_7069924) icon by [kerismaker](https://www.flaticon.com/authors/kerismaker)
