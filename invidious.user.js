@@ -3,7 +3,7 @@
 // @namespace   ltguillaume
 // @description Clean up Invidious UI
 // @author      Guillaume
-// @version     1.2.1
+// @version     1.2.2
 // @match       https://yewtu.be/*
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -51,7 +51,7 @@ GM_addStyle(`
 		padding: 0;
 	}
 
-	.video-js .vjs-tech {
+	.video-js:not(:fullscreen) .vjs-tech {
 		position: absolute;
 		max-height: calc(100vh - 4em);
 	}
