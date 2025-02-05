@@ -3,7 +3,7 @@
 // @namespace   ltguillaume
 // @description CSS, prevent . from opening devmode, F10 to open on Codeberg
 // @author      ltGuillaume
-// @version     2.6.1
+// @version     2.6.11
 // @icon        https://github.com/favicon.ico
 // @match       *://*.github.com/*
 // @grant       GM_addStyle
@@ -16,29 +16,27 @@ GM_addStyle(`
 
 :root[data-color-mode="light"] {
 	--bgColor-default:      #efefef !important;
-	--bgColor-muted:        #f8f8f8 !important;
+	--bgColor-muted:        #f1f3f5 !important;
 	--color-canvas-default: #efefef !important;
 	--color-codemirror-bg:  #f8f8f8 !important;
-/*
-	--color-canvas-subtle:  var(--color-scale-gray-2);
-	--color-canvas-overlay: var(--color-scale-gray-1);
-	--color-project-sidebar-bg: var(--color-scale-gray-1);
-	--color-project-gradient-in: var(--color-scale-gray-1);
-	--color-avatar-bg: var(--color-scale-gray-1);
-	--color-header-logo: var(--color-scale-gray-1);
-*/
 }
 
 :root[data-color-mode="light"] .AppHeader,
-:root[data-color-mode="light"] .gh-header .gh-header-sticky.is-stuck + .gh-header-shadow {
+:root[data-color-mode="light"] .js-notification-shelf-offset-top {
 	background-color: #f9fafb;
 }
 
+:root[data-color-mode="light"] [role="list"],
+:root[data-color-mode="light"] button.selected,
 :root[data-color-mode="light"] table,
+:root[data-color-mode="light"] textarea:not(#read-only-cursor-text-area),
 :root[data-color-mode="light"] .tabnav-tab[aria-selected="true"],
 :root[data-color-mode="light"] .Box,
 :root[data-color-mode="light"] .Box-body,
+:root[data-color-mode="light"] .comment,
 :root[data-color-mode="light"] .edit-comment-hide,
+:root[data-color-mode="light"] .react-issue-body,
+:root[data-color-mode="light"] .react-issue-comment,
 :root[data-color-mode="light"] .js-snippet-clipboard-copy-unpositioned,
 :root[data-color-mode="light"] .markdown-body img {
 	background-color: #f8f8f8 !important;
