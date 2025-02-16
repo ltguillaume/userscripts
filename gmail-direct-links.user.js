@@ -5,6 +5,7 @@
 // @author      ltGuillaume
 // @version     1.9.1
 // @icon        https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico
+// @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/gmail-direct-links.user.js
 // @match       *://mail.google.com/*
 // @grant       GM_openInTab
 // ==/UserScript==

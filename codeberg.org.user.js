@@ -4,6 +4,7 @@
 // @description CSS tweaks for Codeberg.org, F10 to open on GitHub
 // @author      ltGuillaume
 // @version     1.2.7
+// @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/codeberg.org.user.js
 // @match       https://codeberg.org/*
 // @grant       GM_addStyle
 // @grant       GM_openInTab

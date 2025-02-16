@@ -4,6 +4,7 @@
 // @description Clean up Invidious UI
 // @author      Guillaume
 // @version     1.2.4
+// @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/invidious.user.js
 // @match       https://yewtu.be/*
 // @match       https://invidious.privacyredirect.com/*
 // @grant       GM_addStyle

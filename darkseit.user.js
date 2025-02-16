@@ -4,6 +4,7 @@
 // @description Global night mode for all websites using a minimal amount of CSS. Includes domain-wide ignore list. Hotkeys: [F8] toggle for current tab only, [Ctrl]+[F8] to toggle globally; [Alt]+[F8] add to/remove from ignore list.
 // @author      ltGuillaume
 // @version     2.0.6
+// @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/darkseit.user.js
 // @match       *://*/*
 // @grant       GM_addStyle
 // @grant       GM_getValue

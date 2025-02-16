@@ -12,8 +12,8 @@
 // @grant       GM.registerMenuCommand
 // @grant       GM.openInTab
 // @grant       unsafeWindow
-// @homepageURL https://codeberg.org/ltGuillaume/yt2invidio
-// @downloadURL https://codeberg.org/ltGuillaume/yt2invidio/raw/master/yt2invidio.user.js
+// @homepageURL https://codeberg.org/ltGuillaume/userscripts
+// @downloadURL https://codeberg.org/ltGuillaume/userscripts/raw/master/yt2invidio.user.js
 // ==/UserScript==
 
 

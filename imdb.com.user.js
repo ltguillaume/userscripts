@@ -5,6 +5,7 @@
 // @author      driver8, Guillaume
 // @version     0.4.11
 // @icon        http://www.imdb.com/favicon.ico
+// @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/imdb.com.user.js
 // @match       *://*.imdb.com/*
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js
 // @grant       GM_addStyle
