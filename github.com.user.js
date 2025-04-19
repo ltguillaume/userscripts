@@ -3,7 +3,7 @@
 // @namespace   ltguillaume
 // @description CSS, prevent . from opening devmode, F10 to open on Codeberg
 // @author      ltGuillaume
-// @version     2.6.13
+// @version     2.6.14
 // @icon        https://github.com/favicon.ico
 // @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/github.com.user.js
 // @match       *://*.github.com/*
@@ -60,6 +60,11 @@ GM_addStyle(`
 :root[data-color-mode="light"] .markdown-body .highlight pre,
 :root[data-color-mode="light"] .markdown-body pre {
 	background-color: #efefef !important;
+}
+
+:root[data-color-mode="light"] .react-issue-body,
+:root[data-color-mode="light"] .react-issue-comment {
+	border-radius: 6px;
 }
 
 `);
