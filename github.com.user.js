@@ -16,10 +16,10 @@
 GM_addStyle(`
 
 :root[data-color-mode="light"] {
-	--bgColor-default:      #efefef !important;
-	--bgColor-muted:        #f1f3f5 !important;
+	--bgColor-default:\t\t\t#efefef !important;
+	--bgColor-muted:\t\t\t\t#f1f3f5 !important;
 	--color-canvas-default: #efefef !important;
-	--color-codemirror-bg:  #f8f8f8 !important;
+	--color-codemirror-bg:\t#f8f8f8 !important;
 }
 
 :root[data-color-mode="light"] .AppHeader,
