@@ -3,7 +3,7 @@
 // @namespace   asymmetrics.nl
 // @description CSS tweaks for Codeberg.org, F10 to open on GitHub
 // @author      ltGuillaume
-// @version     1.3.3
+// @version     1.4.0
 // @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/codeberg.org.user.js
 // @match       https://codeberg.org/*
 // @grant       GM_addStyle
@@ -18,10 +18,18 @@ GM_addStyle(`
 	--color-body: #efefef !important;
 	--white-bg-color: #efefef !important;
 	--color-box-body: #f8f8f8 !important;
+	--color-footer: none !important;
 	--color-grey-light: #8f8f8f !important;
 	--color-header-wrapper: var(--color-box-body);
 	--color-link: var(--color-blue-dark-1);
 }
+
+#navbar {
+	text-shadow: none !important;
+}
+	#navbar svg {
+		filter: none !important;
+	}
 
 `);
 
@@ -41,7 +49,7 @@ html {
 	padding-bottom: 6px !important;
 	background-color: var(--color-body);
 	border-bottom: 1px solid rgba(0, 0, 0, .059);
-	z-index: 100;
+	z-index: 1;
 }
 	.issue-title-header .button-row {
 		margin-top: 6px;
