@@ -3,7 +3,7 @@
 // @namespace   asymmetrics.nl
 // @description CSS tweaks for Codeberg.org, F10 to open on GitHub
 // @author      ltGuillaume
-// @version     1.4.0
+// @version     1.4.1
 // @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/codeberg.org.user.js
 // @match       https://codeberg.org/*
 // @grant       GM_addStyle
@@ -20,8 +20,8 @@ GM_addStyle(`
 	--color-box-body: #f8f8f8 !important;
 	--color-footer: none !important;
 	--color-grey-light: #8f8f8f !important;
+	--color-blue-dark-1: var(--color-primary);
 	--color-header-wrapper: var(--color-box-body);
-	--color-link: var(--color-blue-dark-1);
 }
 
 #navbar {
@@ -30,6 +30,11 @@ GM_addStyle(`
 	#navbar svg {
 		filter: none !important;
 	}
+
+#release-list a, .file-view a, .timeline-item a {
+	color: var(--color-primary);
+}
+
 
 `);
 

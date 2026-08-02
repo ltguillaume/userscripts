@@ -3,11 +3,13 @@
 // @namespace   ltguillaume
 // @description CSS, prevent . from opening devmode, F10 to open on Codeberg
 // @author      ltGuillaume
-// @version     2.6.14
+// @version     2.7.0
 // @icon        https://github.com/favicon.ico
 // @downloadURL https://codeberg.org/ltguillaume/userscripts/raw/branch/main/github.com.user.js
 // @match       *://*.github.com/*
 // @grant       GM_addStyle
+// @grant       GM_getValue
+// @grant       GM_setValue
 // @grant       GM_openInTab
 // !grant       window.close
 // @run-at      document-start
@@ -16,10 +18,11 @@
 GM_addStyle(`
 
 :root[data-color-mode="light"] {
-	--bgColor-default:\t\t\t#efefef !important;
-	--bgColor-muted:\t\t\t\t#f1f3f5 !important;
+	--bgColor-default:      #efefef !important;
+	--bgColor-muted:        #f1f3f5 !important;
 	--color-canvas-default: #efefef !important;
-	--color-codemirror-bg:\t#f8f8f8 !important;
+	--color-codemirror-bg:  #f8f8f8 !important;
+	--color-accent-subtle:  #f1f3f5 !important;
 }
 
 :root[data-color-mode="light"] .AppHeader,
@@ -49,8 +52,10 @@ GM_addStyle(`
 	background-color: #f8f8f8 !important;
 }
 
+:root[data-color-mode="light"] .timeline-comment .timeline-comment-header,
+:root[data-color-mode="light"] .timeline-comment--caret.current-user::before,
 :root[data-color-mode="light"] [itemtype="https://schema.org/abstract"] {
-	background-color: var(--bgColor-muted);
+	background-color: var(--bgColor-muted) !important;
 }
 
 :root[data-color-mode="light"] .CommentBox-container {
@@ -62,8 +67,7 @@ GM_addStyle(`
 	background-color: #efefef !important;
 }
 
-:root[data-color-mode="light"] .react-issue-body,
-:root[data-color-mode="light"] .react-issue-comment {
+.react-issue-body, .react-issue-comment {
 	border-radius: 6px;
 }
 
@@ -84,15 +88,26 @@ function removeHotkeys() {
 }
 
 let removeHotkeysInterval = setInterval(removeHotkeys, 200);
+let username = GM_getValue('username', false);
+GM_setValue('username', username);
 
 document.addEventListener('keydown', e => {
-	if (e.key == 'F10') {
-		e.preventDefault();
-		let url = document.URL
-			.replace('github.com', 'codeberg.org')
-			.replace('/commits/', '/commits/branch/')
-			.replace('/tree/', '/src/branch/');
-		GM_openInTab(url, { active: true, insert: true });
-//	window.close();
+	switch(e.key) {
+		case 'F4':
+			if (username && !e.altKey) {
+				let repo = document.location.pathname.split('/')[2];
+				let url = 'https://github.com/'+ username +'/'+ repo;
+				GM_openInTab(url, { active: true, insert: true });
+			}
+			break;
+		case 'F10':
+			e.preventDefault();
+			let url = document.URL
+				.replace('github.com', 'codeberg.org')
+				.replace('/commits/', '/commits/branch/')
+				.replace('/tree/', '/src/branch/');
+			GM_openInTab(url, { active: true, insert: true });
+//		window.close();
+			break;
 	}
 });
