@@ -96,18 +96,20 @@ document.addEventListener('keydown', e => {
 		case 'F4':
 			if (username && !e.altKey) {
 				let repo = document.location.pathname.split('/')[2];
-				let url = 'https://github.com/'+ username +'/'+ repo;
-				GM_openInTab(url, { active: true, insert: true });
+				openTab(`https://github.com/${username}/${repo}`);
 			}
 			break;
 		case 'F10':
 			e.preventDefault();
-			let url = document.URL
+			return openTab(document.URL
 				.replace('github.com', 'codeberg.org')
 				.replace('/commits/', '/commits/branch/')
-				.replace('/tree/', '/src/branch/');
-			GM_openInTab(url, { active: true, insert: true });
-//		window.close();
-			break;
+				.replace('/tree/', '/src/branch/')
+			);
 	}
 });
+
+function openTab(url) {
+	GM_openInTab(url, { active: true, insert: true });
+	//	window.close();
+}
